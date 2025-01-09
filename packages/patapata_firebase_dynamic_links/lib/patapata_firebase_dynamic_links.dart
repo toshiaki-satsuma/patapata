@@ -35,14 +35,24 @@ class FirebaseDynamicLinksPlugin extends Plugin
 
     await super.init(app);
 
+    app.getPlugin<StandardAppPlugin>()?.addLinkHandler(_linkHandler);
     _initialData = await FirebaseDynamicLinks.instance.getInitialLink();
     _onLinkSubscription = FirebaseDynamicLinks.instance.onLink.listen(_onLink);
 
     return true;
   }
 
+  bool _linkHandler(Uri link) {
+    if (link.queryParameters.containsKey('link')) {
+      return true;
+    }
+
+    return false;
+  }
+
   @override
   FutureOr<void> dispose() {
+    app.getPlugin<StandardAppPlugin>()?.removeLinkHandler(_linkHandler);
     _onLinkSubscription?.cancel();
     _onLinkSubscription = null;
 
