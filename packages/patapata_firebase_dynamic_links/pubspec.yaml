@@ -7,17 +7,17 @@ repository: https://github.com/gree/patapata/tree/main/packages/patapata_firebas
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.19.0"
+  flutter: ">=3.24.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  patapata_core: ^1.1.0
+  patapata_core: ^1.2.0
 
-  patapata_firebase_core: ^1.1.1
+  patapata_firebase_core: ^1.2.0
 
-  firebase_dynamic_links: ^5.5.1
+  firebase_dynamic_links: ^6.0.10
 
 dev_dependencies:
   flutter_test:

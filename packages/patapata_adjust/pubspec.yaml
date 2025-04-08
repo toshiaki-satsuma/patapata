@@ -7,14 +7,14 @@ repository: https://github.com/gree/patapata/tree/main/packages/patapata_adjust
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.19.0"
+  flutter: ">=3.24.0"
 
 dependencies:
   flutter:
     sdk: flutter
   plugin_platform_interface: ^2.1.8
 
-  patapata_core: ^1.1.0
+  patapata_core: ^1.2.0
 
   adjust_sdk: ^4.38.0
 
