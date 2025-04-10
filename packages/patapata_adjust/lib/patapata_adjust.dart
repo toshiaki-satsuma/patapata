@@ -68,6 +68,10 @@ class AdjustPlugin<T extends AdjustPluginEnvironment> extends Plugin
           .firstWhere((e) => e.name == _environment.adjustLogLevel);
     }
 
+    tConfig.deferredDeeplinkCallback = (String? uri) {
+      debugPrint('[Adjust]: Received deferred deeplink: ${uri!}');
+    };
+
     Adjust.initSdk(tConfig);
 
     WidgetsBinding.instance.addObserver(this);
