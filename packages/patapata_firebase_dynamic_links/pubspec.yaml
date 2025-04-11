@@ -13,11 +13,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-  patapata_core: ^1.1.0
+  patapata_core: ^1.2.0
 
-  patapata_firebase_core: ^1.1.0
+  patapata_firebase_core: ^1.2.0
 
-  firebase_dynamic_links: ^6.0.10
+  firebase_dynamic_links: ^6.1.5
 
 dev_dependencies:
   flutter_test:
