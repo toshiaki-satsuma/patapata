@@ -8,6 +8,7 @@ library patapata_adjust;
 import 'dart:async';
 
 import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_attribution.dart';
 import 'package:adjust_sdk/adjust_config.dart';
 import 'package:adjust_sdk/adjust_event.dart';
 import 'package:flutter/foundation.dart';
@@ -71,6 +72,8 @@ class AdjustPlugin<T extends AdjustPluginEnvironment> extends Plugin
     tConfig.deferredDeeplinkCallback = (String? uri) {
       debugPrint('[Adjust]: Received deferred deeplink: ${uri!}');
     };
+
+  
 
     Adjust.initSdk(tConfig);
 
