@@ -85,7 +85,7 @@ class SentryPlugin extends Plugin {
     _onReportSubscription = null;
   }
 
-  SentryEvent? _beforeSend(SentryEvent event, {dynamic hint}) {
+  FutureOr<SentryEvent?> _beforeSend(SentryEvent event, Hint hint) {
     if (disposed) {
       // Don't send if we are disabled.
       return null;
@@ -99,7 +99,7 @@ class SentryPlugin extends Plugin {
     return event;
   }
 
-  Breadcrumb? _beforeBreadcrumb(Breadcrumb? breadcrumb, {dynamic hint}) {
+  Breadcrumb? _beforeBreadcrumb(Breadcrumb? breadcrumb, Hint hint) {
     if (breadcrumb == null || disposed) {
       // Don't send if we are disabled.
       return null;
