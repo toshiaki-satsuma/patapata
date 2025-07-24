@@ -24,6 +24,9 @@ class FirebaseDynamicLinksPlugin extends Plugin
   @override
   List<Type> get dependencies => [FirebaseCorePlugin];
 
+  @override
+  bool requireRemoteConfig = true;
+
   /// Initializes the [FirebaseDynamicLinksPlugin].
   /// Please note that Dynamic Links are not supported on the web.
   @override
