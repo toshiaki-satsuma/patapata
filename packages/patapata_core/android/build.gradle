@@ -28,6 +28,7 @@ apply plugin: 'org.jetbrains.dokka'
 
 android {
     compileSdkVersion 34
+    namespace 'dev.patapata.patapata_core'
 
     compileOptions {
         coreLibraryDesugaringEnabled true
