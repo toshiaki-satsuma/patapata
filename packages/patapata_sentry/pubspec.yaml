@@ -14,8 +14,8 @@ dependencies:
 
   patapata_core: ^1.1.0
 
-  sentry_flutter: ^7.9.0
-  sentry: ^7.9.0
+  sentry_flutter: ^8.3.0
+  sentry: ^8.3.0
 
 dev_dependencies:
   flutter_test:
