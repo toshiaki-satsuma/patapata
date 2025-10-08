@@ -1,7 +1,6 @@
 PODS:
   - connectivity_plus (0.0.1):
     - Flutter
-    - ReachabilitySwift
   - device_info_plus (0.0.1):
     - Flutter
   - Flutter (1.0.0)
@@ -11,7 +10,6 @@ PODS:
     - Flutter
   - patapata_core (0.0.1):
     - Flutter
-  - ReachabilitySwift (5.0.0)
 
 DEPENDENCIES:
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
@@ -20,10 +18,6 @@ DEPENDENCIES:
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - patapata_core (from `.symlinks/plugins/patapata_core/ios`)
-
-SPEC REPOS:
-  trunk:
-    - ReachabilitySwift
 
 EXTERNAL SOURCES:
   connectivity_plus:
@@ -40,14 +34,13 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/patapata_core/ios"
 
 SPEC CHECKSUMS:
-  connectivity_plus: bf0076dd84a130856aa636df1c71ccaff908fa1d
-  device_info_plus: c6fb39579d0f423935b0c9ce7ee2f44b71b9fce6
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
-  package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
+  connectivity_plus: 2a701ffec2c0ae28a48cf7540e279787e77c447d
+  device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  flutter_local_notifications: ff50f8405aaa0ccdc7dcfb9022ca192e8ad9688f
+  package_info_plus: c0502532a26c7662a62a356cebe2692ec5fe4ec4
   patapata_core: ce5b4c8f74bd32c7c405f0d85d4cbbf25cb75da6
-  ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
 
-PODFILE CHECKSUM: 7be2f5f74864d463a8ad433546ed1de7e0f29aef
+PODFILE CHECKSUM: 251cb053df7158f337c0712f2ab29f4e0fa474ce
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.16.2

@@ -12,18 +12,9 @@ import '../../exceptions.dart';
 import '../../main.dart';
 import '../errors.dart';
 
-/// ErrorPage is a page that is displayed when an error occurs in the application.
-class ErrorPage extends StandardPage<ReportRecord> {
+class AppExceptionPage extends StandardPage<ReportRecord> {
   @override
   Widget buildPage(BuildContext context) {
-    if (pageData.error is AppException) {
-      return _buildAppExceptionPage(context);
-    } else {
-      return _buildUnknownExceptionPage(context);
-    }
-  }
-
-  Widget _buildAppExceptionPage(BuildContext context) {
     final tAppException = pageData.error as AppException;
 
     return Scaffold(
@@ -46,8 +37,31 @@ class ErrorPage extends StandardPage<ReportRecord> {
       ),
     );
   }
+}
 
-  Widget _buildUnknownExceptionPage(BuildContext context) {
+class WebPageNotFoundPage extends StandardPage<ReportRecord> {
+  @override
+  Widget buildPage(BuildContext context) {
+    final tException = pageData.error as WebPageNotFound;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(tException.localizedTitle),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Text(tException.localizedMessage),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class UnknownExceptionPage extends StandardPage<ReportRecord> {
+  @override
+  Widget buildPage(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(l(context, 'errors.app.000.title')),
@@ -66,10 +80,13 @@ class ErrorPage extends StandardPage<ReportRecord> {
 /// ErrorSelectPage is a page that allows you to select the type of error to display.
 class ErrorSelectPage extends StandardPage<void> {
   @override
+  String localizationKey = 'pages.error';
+
+  @override
   Widget buildPage(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(l(context, 'pages.error.title')),
+        title: Text(context.pl('title')),
       ),
       body: ListView(
         children: [
@@ -77,37 +94,37 @@ class ErrorSelectPage extends StandardPage<void> {
           TextButton(
             onPressed: () {
               try {
-                throw const ExampleException();
+                throw ExampleException();
               } on PatapataException catch (e) {
                 e.showDialog(context);
                 logger.severe(e.toString(), e);
               }
             },
-            child: Text(l(context, 'pages.error.example')),
+            child: Text(context.pl('example')),
           ),
           // Throw a network exception named ExampleNetworkException, defined in the sample app, and log it.
           // Specify the network status code in the statusCode argument of ExampleNetworkException.
           TextButton(
             onPressed: () {
               try {
-                throw const ExampleNetworkException(statusCode: 404);
+                throw ExampleNetworkException(statusCode: 404);
               } on PatapataException catch (e) {
                 e.showDialog(context);
                 logger.severe(e.toString(), e);
               }
             },
-            child: Text(l(context, 'pages.error.network', {'prefix': '404'})),
+            child: Text(context.pl('network', {'prefix': '404'})),
           ),
           TextButton(
             onPressed: () {
               try {
-                throw const ExampleNetworkException(statusCode: 500);
+                throw ExampleNetworkException(statusCode: 500);
               } on PatapataException catch (e) {
                 e.showDialog(context);
                 logger.severe(e.toString(), e);
               }
             },
-            child: Text(l(context, 'pages.error.network', {'prefix': '500'})),
+            child: Text(context.pl('network', {'prefix': '500'})),
           ),
           // Throw ExampleMaintenanceException, transition to the maintenance page, and navigate to ErrorSelectPage.
           TextButton(
@@ -122,7 +139,81 @@ class ErrorSelectPage extends StandardPage<void> {
                 logger.severe(e.toString(), e);
               }
             },
-            child: Text(l(context, 'pages.error.maintenance')),
+            child: Text(context.pl('maintenance')),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Center(
+              child: FilledButton(
+                onPressed: () {
+                  context.go<ErrorPageSpecificPage, void>(null);
+                },
+                child: Text(context.pl('specific')),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ErrorPageSpecificPage extends StandardPage<void> {
+  @override
+  String localizationKey = 'pages.error_specific';
+
+  @override
+  Widget buildPage(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(context.pl('title')),
+      ),
+      body: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Center(
+              child: Text(
+                context.pl('body'),
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              try {
+                throw ExampleException();
+              } on PatapataException catch (e) {
+                e.showDialog(context);
+                logger.severe(e.toString(), e);
+              }
+            },
+            child: Text(context.pl('example')),
+          ),
+          TextButton(
+            onPressed: () {
+              try {
+                throw ExampleException(
+                  overridableLocalization: false,
+                );
+              } on PatapataException catch (e) {
+                e.showDialog(context);
+                logger.severe(e.toString(), e);
+              }
+            },
+            child: Text(
+                '${context.pl('example')} (overridableLocalization: false)'),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Center(
+              child: FilledButton(
+                onPressed: () {
+                  context.go<ErrorSelectPage, void>(
+                      null, StandardPageNavigationMode.removeAbove);
+                },
+                child: Text(context.pl('back')),
+              ),
+            ),
           ),
         ],
       ),

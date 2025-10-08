@@ -9,7 +9,7 @@ import 'package:patapata_core/patapata_widgets.dart';
 
 /// This is the abstract class for exceptions that occur in the sample application.
 abstract base class AppException extends PatapataException {
-  const AppException({
+  AppException({
     super.app,
     super.message,
     super.original,
@@ -20,6 +20,7 @@ abstract base class AppException extends PatapataException {
     super.fix,
     super.logLevel,
     super.userLogLevel,
+    super.overridableLocalization,
   });
 
   @override
@@ -31,7 +32,7 @@ abstract base class AppException extends PatapataException {
 
 /// An exception that is thrown when the app encounters an unknown error.
 final class AppUnknownException extends AppException {
-  const AppUnknownException();
+  AppUnknownException();
 
   @override
   String get internalCode => '000';
@@ -39,7 +40,7 @@ final class AppUnknownException extends AppException {
 
 /// Thrown when an unsupported version (usually old) of the app is detected.
 final class AppVersionException extends AppException {
-  const AppVersionException() : super(logLevel: Level.INFO);
+  AppVersionException() : super(logLevel: Level.INFO);
 
   @override
   String get internalCode => '010';

@@ -6,6 +6,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:patapata_core/patapata_core.dart';
+import 'package:patapata_core/patapata_widgets.dart';
 
 /// Error codes for [PatapataCoreException].
 enum PatapataCoreExceptionCode {
@@ -32,6 +33,12 @@ enum PatapataCoreExceptionCode {
 
   /// [NotificationsInitializationException]
   PPE501,
+
+  /// [WebPageNotFound]
+  PPE601,
+
+  /// [RepositoryCacheSizeOverflow]
+  PPE701,
 }
 
 /// Extension to split [PatapataCoreExceptionCode] into
@@ -58,7 +65,7 @@ extension PatapataCoreExceptionCodeExtension on PatapataCoreExceptionCode {
 abstract class PatapataCoreException extends PatapataException {
   final PatapataCoreExceptionCode _exceptionCode;
 
-  const PatapataCoreException({
+  PatapataCoreException({
     required PatapataCoreExceptionCode code,
     super.app,
     super.message,
@@ -70,6 +77,7 @@ abstract class PatapataCoreException extends PatapataException {
     super.fix,
     super.logLevel,
     super.userLogLevel,
+    super.overridableLocalization,
   }) : _exceptionCode = code;
 
   @override

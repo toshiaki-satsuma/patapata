@@ -95,6 +95,9 @@ base class StandardPageWithResultFactory<T extends StandardPageWithResult<R, E>,
   /// Flag indicating whether to stack this page as part of the history or not.
   final bool keepHistory;
 
+  /// Flag indicating whether to enable analytics for navigation.
+  final bool enableNavigationAnalytics;
+
   /// The method for transitioning to this page from other pages.
   /// Please refer to [StandardPageNavigationMode] for navigation modes.
   final StandardPageNavigationMode navigationMode;
@@ -150,6 +153,8 @@ base class StandardPageWithResultFactory<T extends StandardPageWithResult<R, E>,
   ///
   /// [keepHistory] is a flag for whether to push history on the Navigator during transitions. The default is `true`.
   ///
+  /// [enableNavigationAnalytics] is a flag indicating whether to enable navigation analytics. The default is `true`.
+  ///
   /// [navigationMode] specifies the NavigationMode when navigating to this page. The default is [StandardPageNavigationMode.moveToTop].
   ///
   /// [pageKey] is a [LocalKey] to identify the page.
@@ -170,6 +175,7 @@ base class StandardPageWithResultFactory<T extends StandardPageWithResult<R, E>,
     this.groupRoot = false,
     this.group = defaultGroup,
     this.keepHistory = true,
+    this.enableNavigationAnalytics = true,
     this.navigationMode = StandardPageNavigationMode.moveToTop,
     LocalKey Function(
       R pageData,
@@ -316,7 +322,7 @@ base class StandardPageWithResultFactory<T extends StandardPageWithResult<R, E>,
 /// Page navigation is generally done using `context.go`.
 /// You pass the type of the specified page and the page data associated with that type during navigation.
 /// For pages like PageA that do not involve data transfer, you can navigate using `context.go<PageA, void>(null)`.
-/// For screens with PageBData class page data reception, you can navigate using context.go<PageB, PageBData>(PageBData());.
+/// For screens with PageBData class page data reception, you can navigate using `context.go<PageB, PageBData>(PageBData());`.
 /// For pages with PageBData class as page data, you can navigate using `context.go<PageB, PageBData>(PageBData());`.
 ///
 /// There is a concept called "group" that can be configured for each page.
@@ -391,6 +397,7 @@ base class StandardPageFactory<T extends StandardPage<R>, R extends Object?>
     super.groupRoot,
     super.group,
     super.keepHistory,
+    super.enableNavigationAnalytics,
     super.navigationMode,
     super.pageKey,
     super.pageBuilder,
@@ -413,6 +420,7 @@ base class SplashPageFactory<T extends StandardPage<void>>
     super.pageDataWhenNull,
     super.pageName,
     super.restorationId,
+    super.enableNavigationAnalytics,
   }) : super(
           group: 'splash',
           keepHistory: false,
@@ -429,6 +437,7 @@ base class StartupPageFactory<T extends StandardPage<StartupPageCompleter>>
     super.groupRoot,
     String? group,
     super.keepHistory,
+    super.enableNavigationAnalytics,
     super.navigationMode,
     super.pageKey,
     super.pageBuilder,
@@ -454,6 +463,7 @@ base class StandardErrorPageFactory<T extends StandardPage<ReportRecord>>
     super.groupRoot = false,
     super.group = StandardErrorPageFactory.errorGroup,
     super.keepHistory = true,
+    super.enableNavigationAnalytics,
     super.navigationMode = StandardPageNavigationMode.removeAll,
     super.pageKey,
     super.pageBuilder,
@@ -765,11 +775,22 @@ abstract class StandardPageWithResult<T extends Object?, E extends Object?>
   Navigator? get childNavigator => _navigator;
 
   void _onPageDataChanged() {
+    if (!mounted) {
+      return;
+    }
+
     if (!_ready) {
       _doPageDataChangedOnReady = true;
 
       return;
     }
+
+    // TODO: In the future, we should look at use cases here
+    // And decide if we want to update the current navigation
+    // data (like the URL) or not. Currently, we do not.
+    // If we were to, we'd need to update _pageInstanceToRouteData
+    // with the newest pageData.
+
     _sendPageDataEvent();
     (Router.of(context).routerDelegate as StandardRouterDelegate?)
         ?._updatePages();
@@ -822,6 +843,12 @@ abstract class StandardPageWithResult<T extends Object?, E extends Object?>
 
   @protected
   AnalyticsEvent? get analyticsSingletonEvent => null;
+
+  /// Localization key for the page.
+  ///
+  /// Used to localize with [pl] or `context.pl`.
+  /// Override this property if you want to localize.
+  String get localizationKey => '';
 
   @override
   @mustCallSuper
@@ -978,6 +1005,23 @@ abstract class StandardPageWithResult<T extends Object?, E extends Object?>
     }
   }
 
+  /// {@template patapata_widgets.StandardPageWithResult.pl}
+  /// Calls [l] with the specified [localizationKey].
+  ///
+  /// For example, if [localizationKey] is `pages.home` and [key] is `title`, it is localized as `pages.home.title`.
+  /// An assertion error occurs if [localizationKey] is not set.
+  /// {@endtemplate}
+  @protected
+  String pl(
+    String key, [
+    Map<String, Object>? namedParameters,
+  ]) {
+    assert(localizationKey.isNotEmpty,
+        'localizationKey is not set. Please override localizationKey.');
+
+    return l(context, '$localizationKey.$key', namedParameters);
+  }
+
   @override
   @mustCallSuper
   Widget build(BuildContext context) {
@@ -1040,6 +1084,8 @@ abstract class StandardPageWithResult<T extends Object?, E extends Object?>
         _navigator = Navigator(
           key: _childNavigatorKey,
           pages: _pageChildInstances![tParentPageInstance]!,
+          // TODO: To be addressed in the future.
+          // ignore: deprecated_member_use
           onPopPage: (route, result) {
             if (_delegate?.willPopPage != null) {
               if (_delegate!.willPopPage!(route, result)) {
@@ -1073,6 +1119,10 @@ abstract class StandardPageWithResult<T extends Object?, E extends Object?>
     return tChild;
   }
 
+  /// Describe the user interface for this [StandardPage]
+  /// The regular build method should generally not be used.
+  ///
+  /// The context passed to this method is wrapped with a [Builder] from the [StandardPage]'s context.
   @protected
   Widget buildPage(BuildContext context);
 }
@@ -1176,8 +1226,9 @@ class StandardRouteInformationParser
 
   @override
   RouteInformation? restoreRouteInformation(StandardRouteData configuration) {
-    final tStringLocation =
-        configuration.factory?.generateLink(configuration.pageData);
+    final tStringLocation = configuration.factory?.generateLink(
+        configuration.pageData ??
+            configuration.factory?.pageDataWhenNull?.call());
 
     if (tStringLocation != null) {
       final tLocation = Uri.tryParse(tStringLocation);
@@ -1224,6 +1275,13 @@ class StandardRouterDelegate extends RouterDelegate<StandardRouteData>
   final _pageInstanceToRouteData = <Page, StandardRouteData>{};
   final _pageInstanceCompleterMap = <Page, Completer>{};
 
+  StandardPageWithResultFactory get defaultRootPageFactory =>
+      (_factoryTypeMap.entries
+          .firstWhereOrNull((e) =>
+              e.value.group == StandardPageWithResultFactory.defaultGroup)
+          ?.value) ??
+      _factoryTypeMap.values.first;
+
   bool _initialRouteProcessed = false;
 
   bool _startupSequenceProcessed = false;
@@ -1251,6 +1309,9 @@ class StandardRouterDelegate extends RouterDelegate<StandardRouteData>
     _factoryTypeMap.clear();
     _standardPagesMap.clear();
 
+    final tWithDummySplashPage =
+        pageFactories.whereType<SplashPageFactory>().isEmpty;
+
     for (var tFactory in pageFactories) {
       tFactory._delegate = this;
       _factoryTypeMap[tFactory.pageType] = tFactory;
@@ -1264,6 +1325,14 @@ class StandardRouterDelegate extends RouterDelegate<StandardRouteData>
         }
         _standardPagesMap[tFactory.parentPageType]!.add(tFactory.pageType);
       }
+    }
+    if (tWithDummySplashPage) {
+      final tDummySplashPage = SplashPageFactory(
+        create: (_) => _DummySplashPage(),
+        enableNavigationAnalytics: false,
+      ).._delegate = this;
+      _factoryTypeMap[_DummySplashPage] = tDummySplashPage;
+      _standardPagesMap[_DummySplashPage] = [];
     }
 
     if (_pageInstances.isNotEmpty) {
@@ -1289,9 +1358,16 @@ class StandardRouterDelegate extends RouterDelegate<StandardRouteData>
     }
 
     if (_pageInstances.isEmpty) {
-      StandardPageWithResultFactory<StandardPageWithResult<Object?, Object?>,
-          Object?, Object?> tStandardPage;
-      if (pageFactories.first.parentPageType == null) {
+      final StandardPageWithResultFactory<
+          StandardPageWithResult<Object?, Object?>,
+          Object?,
+          Object?> tStandardPage;
+
+      if (!_initialRouteProcessed) {
+        tStandardPage = (tWithDummySplashPage)
+            ? _factoryTypeMap[_DummySplashPage]!
+            : pageFactories.whereType<SplashPageFactory>().first;
+      } else if (pageFactories.first.parentPageType == null) {
         tStandardPage = pageFactories.first;
       } else {
         // If the first page of pageFactories has a parentType set, the parent page will be added first.
@@ -1308,11 +1384,10 @@ class StandardRouterDelegate extends RouterDelegate<StandardRouteData>
         tPageData,
       );
 
-      _pageInstanceToTypeMap[tPage] = pageFactories.first.pageType;
+      _pageInstanceToTypeMap[tPage] = tStandardPage.pageType;
       _pageInstanceToRouteData[tPage] =
-          StandardRouteData(factory: pageFactories.first, pageData: null);
-      _pageInstanceCompleterMap[tPage] =
-          pageFactories.first._createResultCompleter();
+          StandardRouteData(factory: tStandardPage, pageData: tPageData);
+      _pageInstanceCompleterMap[tPage] = tStandardPage._createResultCompleter();
       _pageInstances.add(tPage);
     }
   }
@@ -1424,6 +1499,8 @@ class StandardRouterDelegate extends RouterDelegate<StandardRouteData>
         routeObserver,
       ],
       pages: _pageInstances,
+      // TODO: To be addressed in the future.
+      // ignore: deprecated_member_use
       onPopPage: _onPopPage,
     );
 
@@ -1531,6 +1608,8 @@ class StandardRouterDelegate extends RouterDelegate<StandardRouteData>
     return false;
   }
 
+  bool _continueProcessInitialRoute = false;
+
   /// {@template patapata_widgets.StandardRouteDelegate.processInitialRoute}
   /// Selects the initial page that the application should display and navigates to that page.
   /// If this initialization has already been performed, it does nothing.
@@ -1538,15 +1617,28 @@ class StandardRouterDelegate extends RouterDelegate<StandardRouteData>
   /// The priority of what page is shown is as follows:
   /// First, if there is a plugin in the [App] that returns data from getInitialRouteData, that data is used to navigate.
   /// Next, if there is a link that opened this application, that link is used.
-  /// If neither of these conditions is met, a link with an empty string in the [StandardMaterialApp.pages] array using [StandardPageFactory.new]'s links is searched for and navigated to.
-  /// If no page can be found, an assertion error is thrown.
+  /// If there is no link that opened the application, a link with an empty string using [StandardPageFactory.new] in the [StandardMaterialApp.pages] array is searched for and navigated to.
+  /// If neither of these conditions are met, the first page in the [StandardMaterialApp.pages] array with [StandardPageFactory.group] having [StandardPageWithResultFactory.defaultGroup] is displayed.
+  /// In the case of Web, [WebPageNotFound] is thrown at this point.
+  ///
+  /// If no page can be found, the first page in [StandardMaterialApp.pages] is displayed.
   /// {@endtemplate}
-  void processInitialRoute() async {
+  Future<void> processInitialRoute() async {
     if (_initialRouteProcessed) {
       return;
     }
 
     _initialRouteProcessed = true;
+    _continueProcessInitialRoute = true;
+
+    StandardRouteData? tInitialRouteData = _initialRouteData ??
+        (await getApp().standardAppPlugin.parser?.parseRouteInformation(
+            RouteInformation(uri: Uri(path: Navigator.defaultRouteName))));
+    _initialRouteData = null;
+
+    if (!_continueProcessInitialRoute) {
+      return;
+    }
 
     final tPlugins = _navigatorKey.currentContext
         ?.read<App>()
@@ -1556,6 +1648,10 @@ class StandardRouterDelegate extends RouterDelegate<StandardRouteData>
       for (var i in tPlugins) {
         final tRouteData = await i.getInitialRouteData();
 
+        if (!_continueProcessInitialRoute) {
+          return;
+        }
+
         if (tRouteData != null) {
           routeWithConfiguration(tRouteData);
 
@@ -1564,11 +1660,18 @@ class StandardRouterDelegate extends RouterDelegate<StandardRouteData>
       }
     }
 
-    final tInitialRouteData =
-        _initialRouteData ?? _getStandardRouteDataForPath(Uri(path: ''));
-    _initialRouteData = null;
+    if (tInitialRouteData?.factory == null) {
+      if (kIsWeb || StandardAppPlugin.debugIsWeb) {
+        throw WebPageNotFound();
+      }
 
-    assert(tInitialRouteData != null);
+      final tFactory = defaultRootPageFactory;
+
+      tInitialRouteData = StandardRouteData(
+        factory: tFactory,
+        pageData: tFactory.pageDataWhenNull?.call(),
+      );
+    }
 
     routeWithConfiguration(tInitialRouteData!);
   }
@@ -1579,6 +1682,17 @@ class StandardRouterDelegate extends RouterDelegate<StandardRouteData>
   Future<void> setNewRoutePath(StandardRouteData configuration) {
     if (!_initialRouteProcessed) {
       _initialRouteData = configuration;
+
+      if (!_startupSequenceProcessed) {
+        final tEnv = getApp().environment;
+        final tAutoProcessInitialRoute = switch (tEnv) {
+          StandardAppEnvironment() => tEnv.autoProcessInitialRoute,
+          _ => true
+        };
+        if (tAutoProcessInitialRoute) {
+          processInitialRoute();
+        }
+      }
 
       return SynchronousFuture(null);
     }
@@ -1639,6 +1753,8 @@ class StandardRouterDelegate extends RouterDelegate<StandardRouteData>
     Object? pageData,
     StandardPageNavigationMode? navigationMode,
   ) {
+    _continueProcessInitialRoute = false;
+
     StandardPageWithResultFactory tFactory = factory;
 
     var tCurrentPage = _pageInstances.lastOrNull;
@@ -1816,9 +1932,12 @@ class StandardRouterDelegate extends RouterDelegate<StandardRouteData>
             ?.standardPageKey
             .currentState;
 
+        bool tLastPageDataChanged = false;
+
         if (tLastPage != null) {
           if (tLastPage.pageData != pageData) {
             tLastPage.pageData = pageData;
+            tLastPageDataChanged = true;
           }
 
           if (tLastPage.active) {
@@ -1847,6 +1966,13 @@ class StandardRouterDelegate extends RouterDelegate<StandardRouteData>
         );
 
         final tFuture = (tCompleter as Completer<E?>).future;
+
+        if (tLastPageDataChanged) {
+          _pageInstanceToRouteData[tLastPageInstance] = StandardRouteData(
+            factory: tFactory,
+            pageData: pageData,
+          );
+        }
 
         _updatePages();
 
@@ -1937,4 +2063,35 @@ class StandardRouterDelegate extends RouterDelegate<StandardRouteData>
 
     return tFactory;
   }
+}
+
+/// An extension class that adds StandardPage functionality to [BuildContext].
+extension StandardPageContext on BuildContext {
+  /// {@macro patapata_widgets.StandardPageWithResult.pl}
+  ///
+  /// Throws an exception if [StandardPageWithResult] does not exist in the widget tree of the context.
+  String pl(
+    String key, [
+    Map<String, Object>? namedParameters,
+  ]) {
+    if (this is StatefulElement) {
+      final tElement = (this as StatefulElement);
+      if (tElement.state is StandardPageWithResult) {
+        final tState = tElement.state as StandardPageWithResult;
+        return tState.pl(key, namedParameters);
+      }
+    }
+
+    return Provider.of<StandardPageWithResult>(this).pl(key, namedParameters);
+  }
+}
+
+class WebPageNotFound extends PatapataCoreException {
+  WebPageNotFound() : super(code: PatapataCoreExceptionCode.PPE601);
+
+  @override
+  Level? get logLevel => Level.INFO;
+
+  @override
+  Level? get userLogLevel => Level.SHOUT;
 }

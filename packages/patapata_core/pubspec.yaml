@@ -1,31 +1,32 @@
 name: patapata_core
 description: A collection of best-practices for building applications quickly and reliably.
-version: 1.1.0
+version: 1.4.0
 homepage: https://github.com/gree/patapata
 repository: https://github.com/gree/patapata/tree/main/packages/patapata_core
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.19.0"
+  flutter: ">=3.29.0"
 
 executables:
   bootstrap:
 
 dependencies:
-  intl: ">=0.17.0 <0.20.0"
+  intl: ">=0.17.0 <0.30.0"
   timezone: ">=0.9.0 <0.11.0"
 
-  logging: ^1.2.0
+  logging: ^1.3.0
   stack_trace: ^1.11.1
   provider: ^6.1.2
-  connectivity_plus: ^6.0.2
+  connectivity_plus: ^6.1.3
   visibility_detector: ^0.4.0+2
-  collection: ">=1.17.2 <1.19.0"
+  collection: ">=1.17.2 <1.20.0"
+  meta: ^1.15.0
   yaml: ^3.1.2
-  package_info_plus: ^8.0.0
-  device_info_plus: ^10.1.0
-  device_info_plus_platform_interface: ^7.0.0
-  flutter_local_notifications: ^17.0.1
+  package_info_plus: ">=6.0.0 <9.0.0"
+  device_info_plus: ^11.3.0
+  device_info_plus_platform_interface: ^7.0.2
+  flutter_local_notifications: ^19.0.0
 
   flutter_web_plugins:
     sdk: flutter
@@ -36,9 +37,10 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   args: ^2.4.2
-  dart_style: ^2.3.2
+  dart_style: ">=2.3.2 <4.0.0"
   xml: ^6.3.0
   yaml_edit: ^2.1.1
+  web: ^1.1.0
 
 dev_dependencies:
   test: ">=1.20.0"
@@ -48,6 +50,8 @@ dev_dependencies:
   golden_toolkit: ^0.15.0
   mockito: ^5.4.4
   flutter_svg: ^2.0.10+1
+  patapata_builder: ^1.2.0
+  build_runner: ^2.4.13
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

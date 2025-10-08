@@ -1,3 +1,20 @@
+## 1.3.1
+
+ - Update a dependency to the latest release.
+
+## 1.3.0
+
+ - **FEAT**: Update a dependency.
+
+## 1.2.0
+
+ - **FIX**: firebase remote config can not listen to remote config changes on the web.
+ - **FEAT**: support flutter 3.27.1.
+
+## 1.1.1
+
+ - **FIX**: when running dart doc, some documentation is not generated.
+
 ## 1.1.0
 
  - **FEAT**: Adapt to the Privacy Manifest.

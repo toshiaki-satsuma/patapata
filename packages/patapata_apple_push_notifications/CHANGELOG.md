@@ -1,3 +1,19 @@
+## 1.2.2
+
+ - Update a dependency to the latest release.
+
+## 1.2.1
+
+ - Update a dependency to the latest release.
+
+## 1.2.0
+
+ - **FEAT**: support flutter 3.27.1.
+
+## 1.1.1
+
+ - **FIX**: when running dart doc, some documentation is not generated.
+
 ## 1.1.0
 
  - **FEAT**: Adapt to the Privacy Manifest.

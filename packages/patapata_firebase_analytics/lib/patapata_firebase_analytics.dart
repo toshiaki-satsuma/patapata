@@ -73,7 +73,11 @@ class FirebaseAnalyticsPlugin extends Plugin {
 
     backend.logEvent(
       name: event.name,
-      parameters: parameters.isEmpty ? null : parameters,
+      parameters: <String, Object>{
+        if (event.navigationInteractionContextData != null)
+          for (var i in event.navigationInteractionContextData!.entries)
+            'nic_${i.key}': Analytics.defaultMakeLoggableToNative(i.value),
+      }..addAll(tParameters ?? {}),
     );
   }
 

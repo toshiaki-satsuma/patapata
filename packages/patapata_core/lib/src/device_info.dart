@@ -166,6 +166,10 @@ class DeviceInfoPlugin extends Plugin {
     },
     'serialNumber': 'SERIAL',
     'isLowRamDevice': false,
+    'freeDiskSize': 1024,
+    'totalDiskSize': 2024,
+    'physicalRamSize': 8192,
+    'availableRamSize': 4096,
   };
 
   @visibleForTesting
@@ -197,6 +201,10 @@ class DeviceInfoPlugin extends Plugin {
     Map<String, dynamic>? version,
     String? serialNumber,
     bool? isLowRamDevice,
+    int? freeDiskSize,
+    int? totalDiskSize,
+    int? physicalRamSize,
+    int? availableRamSize,
   }) {
     mockAndroidDeviceInfoMap = {
       'id': id ?? _defaultMockAndroidDeviceInfoMap['id'],
@@ -231,6 +239,14 @@ class DeviceInfoPlugin extends Plugin {
           serialNumber ?? _defaultMockAndroidDeviceInfoMap['serialNumber'],
       'isLowRamDevice':
           isLowRamDevice ?? _defaultMockAndroidDeviceInfoMap['isLowRamDevice'],
+      'freeDiskSize':
+          freeDiskSize ?? _defaultMockAndroidDeviceInfoMap['freeDiskSize'],
+      'totalDiskSize':
+          totalDiskSize ?? _defaultMockAndroidDeviceInfoMap['totalDiskSize'],
+      'physicalRamSize': physicalRamSize ??
+          _defaultMockAndroidDeviceInfoMap['physicalRamSize'],
+      'availableRamSize': availableRamSize ??
+          _defaultMockAndroidDeviceInfoMap['availableRamSize'],
     };
   }
 
@@ -238,6 +254,7 @@ class DeviceInfoPlugin extends Plugin {
   static Map<String, dynamic> mockIosDeviceInfoMap = <String, dynamic>{
     'name': 'name',
     'model': 'model',
+    'modelName': 'modelName',
     'utsname': <String, dynamic>{
       'release': 'release',
       'version': 'version',
@@ -248,8 +265,13 @@ class DeviceInfoPlugin extends Plugin {
     'systemName': 'systemName',
     'systemVersion': 'systemVersion',
     'isPhysicalDevice': true,
+    'isiOSAppOnMac': true,
     'localizedModel': 'localizedModel',
     'identifierForVendor': 'identifierForVendor',
+    'freeDiskSize': 1024,
+    'totalDiskSize': 2024,
+    'physicalRamSize': 8192,
+    'availableRamSize': 4096,
   };
 
   /// Mocks [IosDeviceInfo] for testing purposes.
@@ -257,25 +279,39 @@ class DeviceInfoPlugin extends Plugin {
   static void setMockIosDeviceInfo({
     String? name,
     String? model,
+    String? modelName,
     Map<String, dynamic>? utsname,
     String? systemName,
     String? systemVersion,
     bool? isPhysicalDevice,
+    bool? isiOSAppOnMac,
     String? localizedModel,
     String? identifierForVendor,
+    int? freeDiskSize,
+    int? totalDiskSize,
+    int? physicalRamSize,
+    int? availableRamSize,
   }) {
     mockIosDeviceInfoMap = <String, dynamic>{
       'name': name ?? mockIosDeviceInfoMap['name'],
       'model': model ?? mockIosDeviceInfoMap['model'],
+      'modelName': modelName ?? mockIosDeviceInfoMap['modelName'],
       'utsname': utsname ?? mockIosDeviceInfoMap['utsname'],
       'systemName': systemName ?? mockIosDeviceInfoMap['systemName'],
       'systemVersion': systemVersion ?? mockIosDeviceInfoMap['systemVersion'],
       'isPhysicalDevice':
           isPhysicalDevice ?? mockIosDeviceInfoMap['isPhysicalDevice'],
+      'isiOSAppOnMac': isiOSAppOnMac ?? mockIosDeviceInfoMap['isiOSAppOnMac'],
       'localizedModel':
           localizedModel ?? mockIosDeviceInfoMap['localizedModel'],
       'identifierForVendor':
           identifierForVendor ?? mockIosDeviceInfoMap['identifierForVendor'],
+      'freeDiskSize': freeDiskSize ?? mockIosDeviceInfoMap['freeDiskSize'],
+      'totalDiskSize': totalDiskSize ?? mockIosDeviceInfoMap['totalDiskSize'],
+      'physicalRamSize':
+          physicalRamSize ?? mockIosDeviceInfoMap['physicalRamSize'],
+      'availableRamSize':
+          availableRamSize ?? mockIosDeviceInfoMap['availableRamSize'],
     };
   }
 
@@ -330,6 +366,7 @@ class DeviceInfoPlugin extends Plugin {
     'hostName': 'hostName',
     'arch': 'arch',
     'model': 'model',
+    'modelName': 'modelName',
     'kernelVersion': 'kernelVersion',
     'osRelease': 'osRelease',
     'majorVersion': 10,
@@ -346,6 +383,7 @@ class DeviceInfoPlugin extends Plugin {
   static void setMockMacosDeviceInfo({
     String? arch,
     String? model,
+    String? modelName,
     int? activeCPUs,
     int? memorySize,
     int? cpuFrequency,
@@ -361,6 +399,7 @@ class DeviceInfoPlugin extends Plugin {
     mockMacosDeviceInfoMap = <String, dynamic>{
       'arch': arch ?? mockMacosDeviceInfoMap['arch'],
       'model': model ?? mockMacosDeviceInfoMap['model'],
+      'modelName': modelName ?? mockMacosDeviceInfoMap['modelName'],
       'activeCPUs': activeCPUs ?? mockMacosDeviceInfoMap['activeCPUs'],
       'memorySize': memorySize ?? mockMacosDeviceInfoMap['memorySize'],
       'cpuFrequency': cpuFrequency ?? mockMacosDeviceInfoMap['cpuFrequency'],
@@ -473,7 +512,7 @@ class DeviceInfoPlugin extends Plugin {
     'appCodeName': 'appCodeName',
     'appName': 'appName',
     'appVersion': 'appVersion',
-    'deviceMemory': 42,
+    'deviceMemory': 42.0,
     'language': 'language',
     'languages': ['en', 'es'],
     'platform': 'platform',
@@ -493,7 +532,7 @@ class DeviceInfoPlugin extends Plugin {
     String? appCodeName,
     String? appName,
     String? appVersion,
-    int? deviceMemory,
+    double? deviceMemory,
     String? language,
     List<String>? languages,
     String? platform,

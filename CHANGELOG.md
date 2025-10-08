@@ -3,6 +3,263 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-10-02
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`patapata_builder` - `v1.2.0`](#patapata_builder---v120)
+ - [`patapata_core` - `v1.4.0`](#patapata_core---v140)
+ - [`patapata_riverpod` - `v1.3.0`](#patapata_riverpod---v130)
+ - [`patapata_sentry` - `v1.2.2`](#patapata_sentry---v122)
+ - [`patapata_firebase_remote_config` - `v1.3.1`](#patapata_firebase_remote_config---v131)
+ - [`patapata_firebase_analytics` - `v1.2.2`](#patapata_firebase_analytics---v122)
+ - [`patapata_firebase_messaging` - `v1.3.1`](#patapata_firebase_messaging---v131)
+ - [`patapata_firebase_auth` - `v1.2.2`](#patapata_firebase_auth---v122)
+ - [`patapata_firebase_core` - `v1.3.1`](#patapata_firebase_core---v131)
+ - [`patapata_apple_push_notifications` - `v1.2.2`](#patapata_apple_push_notifications---v122)
+ - [`patapata_firebase_crashlytics` - `v1.3.1`](#patapata_firebase_crashlytics---v131)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `patapata_sentry` - `v1.2.2`
+ - `patapata_firebase_remote_config` - `v1.3.1`
+ - `patapata_firebase_analytics` - `v1.2.2`
+ - `patapata_firebase_messaging` - `v1.3.1`
+ - `patapata_firebase_auth` - `v1.2.2`
+ - `patapata_firebase_core` - `v1.3.1`
+ - `patapata_apple_push_notifications` - `v1.2.2`
+ - `patapata_firebase_crashlytics` - `v1.3.1`
+
+---
+
+#### `patapata_builder` - `v1.2.0`
+
+ - **FEAT**: support flutter 3.35.0.
+
+#### `patapata_core` - `v1.4.0`
+
+ - **FIX**: local_web_config, Monitor StorageEvent to detect changes from another tab.
+ - **FIX**: setMany in web_local_config causes cast error.
+ - **FEAT**: bump minimum Flutter version to 3.29.0.
+ - **FEAT**: support flutter 3.35.0.
+ - **DOCS**: Added description of StandardPage.buildPage.
+
+#### `patapata_riverpod` - `v1.3.0`
+
+ - **FEAT**: support flutter 3.35.0.
+
+
+## 2025-04-04
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`patapata_builder` - `v1.1.0`](#patapata_builder---v110)
+ - [`patapata_core` - `v1.3.0`](#patapata_core---v130)
+ - [`patapata_firebase_auth` - `v1.2.1`](#patapata_firebase_auth---v121)
+ - [`patapata_firebase_core` - `v1.3.0`](#patapata_firebase_core---v130)
+ - [`patapata_firebase_crashlytics` - `v1.3.0`](#patapata_firebase_crashlytics---v130)
+ - [`patapata_firebase_messaging` - `v1.3.0`](#patapata_firebase_messaging---v130)
+ - [`patapata_firebase_remote_config` - `v1.3.0`](#patapata_firebase_remote_config---v130)
+ - [`patapata_apple_push_notifications` - `v1.2.1`](#patapata_apple_push_notifications---v121)
+ - [`patapata_sentry` - `v1.2.1`](#patapata_sentry---v121)
+ - [`patapata_riverpod` - `v1.2.1`](#patapata_riverpod---v121)
+ - [`patapata_firebase_analytics` - `v1.2.1`](#patapata_firebase_analytics---v121)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `patapata_apple_push_notifications` - `v1.2.1`
+ - `patapata_sentry` - `v1.2.1`
+ - `patapata_riverpod` - `v1.2.1`
+ - `patapata_firebase_analytics` - `v1.2.1`
+
+---
+
+#### `patapata_builder` - `v1.1.0`
+
+ - **FEAT**: Addition of the New Feature: Repository System.
+
+#### `patapata_core` - `v1.3.0`
+
+ - **FIX**: When running bootstrap on a new Flutter project, the uses-material-design entry is unintentionally removed from pubspec.yaml.
+ - **FEAT**: support flutter 3.29.0.
+ - **FEAT**: Added the SynchronousErrorableFuture class. This class is used within the repository system, but it is recommended to avoid using it in general.
+ - **FEAT**: Addition of the New Feature: Repository System.
+ - **FEAT**: When creating a `PatapataException` , if the currently displayed page has a [StandardPageWithResult.localizationKey] set, the default key can now be overridden using the localizationKey.
+ - **FEAT**: Support for WebAssembly (Wasm).
+ - **FEAT**: The StandardPage now includes the `StandardPageWithResult.localizationKey` property. This allows for localization by utilizing context.pl with the specified key.
+ - **DOCS**: Fix some dartdocs that are interpreted as HTML.
+ - **DOCS**: Fix parts that do not match the Dart formatter.
+
+#### `patapata_firebase_auth` - `v1.2.1`
+
+ - **DOCS**: Updated README for minimum version.
+
+#### `patapata_firebase_core` - `v1.3.0`
+
+ - **FEAT**: Update a dependency.
+
+#### `patapata_firebase_crashlytics` - `v1.3.0`
+
+ - **FEAT**: Update a dependency.
+
+#### `patapata_firebase_messaging` - `v1.3.0`
+
+ - **FEAT**: Update a dependency.
+ - **FEAT**: support flutter 3.29.0.
+
+#### `patapata_firebase_remote_config` - `v1.3.0`
+
+ - **FEAT**: Update a dependency.
+
+
+## 2025-01-08
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`patapata_apple_push_notifications` - `v1.2.0`](#patapata_apple_push_notifications---v120)
+ - [`patapata_core` - `v1.2.0`](#patapata_core---v120)
+ - [`patapata_firebase_analytics` - `v1.2.0`](#patapata_firebase_analytics---v120)
+ - [`patapata_firebase_auth` - `v1.2.0`](#patapata_firebase_auth---v120)
+ - [`patapata_firebase_core` - `v1.2.0`](#patapata_firebase_core---v120)
+ - [`patapata_firebase_crashlytics` - `v1.2.0`](#patapata_firebase_crashlytics---v120)
+ - [`patapata_firebase_messaging` - `v1.2.0`](#patapata_firebase_messaging---v120)
+ - [`patapata_firebase_remote_config` - `v1.2.0`](#patapata_firebase_remote_config---v120)
+ - [`patapata_riverpod` - `v1.2.0`](#patapata_riverpod---v120)
+ - [`patapata_sentry` - `v1.2.0`](#patapata_sentry---v120)
+
+---
+
+#### `patapata_apple_push_notifications` - `v1.2.0`
+
+ - **FEAT**: support flutter 3.27.1.
+
+#### `patapata_core` - `v1.2.0`
+
+ - **FIX**: Added enableNavigationAnalytics to StandardPageWithResultFactory. The default is true.
+ - **FIX**: fix an issue when StandardPage page data's type changes from nullable to non-nullable and null data is trying to be restored on route load.
+ - **FIX**: log_test fails on Windows.
+ - **FIX**: update com.android.tools.build:gradle:8.1.0.
+ - **FIX**: When PatapataException.userLogLevel is set to SHOUT for an unknown error, goErrorPage is not called.
+ - **FEAT**: support flutter 3.27.1.
+ - **FEAT**: StandardRouterDelegate.processInitialRoute to run automatically.
+ - **FEAT**: A new widget, InfiniteScrollListView, has been implemented to add infinite scroll functionality to Flutter’s ListView and GridView.
+ - **FEAT**: The logging system overrides PlatformDispatcher.onError. This ensures that all unknown exceptions, including those that occur outside of Patapata's Zone, are handled.
+ - **FEAT**: With the fix to PatapataException, the App instance is now retrieved from the Zone when creating exceptions. As a result, it is no longer a const property.
+
+#### `patapata_firebase_analytics` - `v1.2.0`
+
+ - **FEAT**: support flutter 3.27.1.
+
+#### `patapata_firebase_auth` - `v1.2.0`
+
+ - **FEAT**: support flutter 3.27.1.
+
+#### `patapata_firebase_core` - `v1.2.0`
+
+ - **FEAT**: support flutter 3.27.1.
+
+#### `patapata_firebase_crashlytics` - `v1.2.0`
+
+ - **FEAT**: support flutter 3.27.1.
+
+#### `patapata_firebase_messaging` - `v1.2.0`
+
+ - **FIX**: update com.android.tools.build:gradle:8.1.0.
+ - **FEAT**: support flutter 3.27.1.
+
+#### `patapata_firebase_remote_config` - `v1.2.0`
+
+ - **FIX**: firebase remote config can not listen to remote config changes on the web.
+ - **FEAT**: support flutter 3.27.1.
+
+#### `patapata_riverpod` - `v1.2.0`
+
+ - **FEAT**: support flutter 3.27.1.
+
+#### `patapata_sentry` - `v1.2.0`
+
+ - **FEAT**: support flutter 3.27.1.
+
+
+## 2024-06-12
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`patapata_apple_push_notifications` - `v1.1.1`](#patapata_apple_push_notifications---v111)
+ - [`patapata_firebase_analytics` - `v1.1.1`](#patapata_firebase_analytics---v111)
+ - [`patapata_firebase_core` - `v1.1.1`](#patapata_firebase_core---v111)
+ - [`patapata_firebase_crashlytics` - `v1.1.1`](#patapata_firebase_crashlytics---v111)
+ - [`patapata_firebase_messaging` - `v1.1.1`](#patapata_firebase_messaging---v111)
+ - [`patapata_firebase_remote_config` - `v1.1.1`](#patapata_firebase_remote_config---v111)
+ - [`patapata_sentry` - `v1.1.1`](#patapata_sentry---v111)
+
+---
+
+#### `patapata_apple_push_notifications` - `v1.1.1`
+
+ - **FIX**: when running dart doc, some documentation is not generated.
+
+#### `patapata_firebase_analytics` - `v1.1.1`
+
+ - **FIX**: when running dart doc, some documentation is not generated.
+
+#### `patapata_firebase_core` - `v1.1.1`
+
+ - **FIX**: when running dart doc, some documentation is not generated.
+
+#### `patapata_firebase_crashlytics` - `v1.1.1`
+
+ - **FIX**: when running dart doc, some documentation is not generated.
+
+#### `patapata_firebase_messaging` - `v1.1.1`
+
+ - **FIX**: when running dart doc, some documentation is not generated.
+
+#### `patapata_firebase_remote_config` - `v1.1.1`
+
+ - **FIX**: when running dart doc, some documentation is not generated.
+
+#### `patapata_sentry` - `v1.1.1`
+
+ - **FIX**: when running dart doc, some documentation is not generated.
+
+
 ## 2024-05-20
 
 ### Changes

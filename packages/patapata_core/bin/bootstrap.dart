@@ -111,8 +111,18 @@ void main(List<String> arguments) {
     // And if so, check if it contains the flutter_deeplinking_enabled meta-data.
     _checkAndroidManifestFile(tResults);
 
-    // Check if the minimum version of the Android SDK is set to the flutter default,
-    // And if it is, change it to 21.
+    // Change Android Gradle Plugin version to 8.7.0
+    _checkAndroidGradleSettingsFile(tResults);
+
+    // Change Android Gradle Wrapper version to 8.10.2
+    _checkAndroidGradleWrapperFile(tResults);
+
+    // Change Android SDK compile version to 35
+    // Change Android SDK target version to 35
+    // Change Android SDK minimum version to 24
+    // Change Android NDK version to 27.0.12077973
+    // Change Java version to 11
+    // Check if coreLibraryDesugaringEnabled is set; if not, add it.
     _checkAndroidGradleFile(tResults);
 
     // Check if Info.plist file contains the FlutterDeepLinkingEnabled key.
@@ -120,7 +130,7 @@ void main(List<String> arguments) {
     _checkInfoPlistFile(tResults);
 
     // Check if the minumum version of iOS is unset.
-    // If it is, set it to 12.0.
+    // If it is, set it to 13.0.
     _checkPodFile(tResults);
 
     // Check if the l10n directory exists.
@@ -166,7 +176,9 @@ void _checkEnvironmentFile(ArgResults results) {
       tFile.createSync(recursive: true);
     }
 
-    tFile.writeAsStringSync(DartFormatter().format('''
+    tFile.writeAsStringSync(
+        DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+            .format('''
 import 'package:flutter/foundation.dart';
 import 'package:patapata_core/patapata_core.dart';
 ${tMixins.contains('ScreenLayoutEnvironment') ? '''
@@ -185,9 +197,9 @@ class Environment${tMixins.isNotEmpty ? ' with\n${tMixins.join(',\n')}' : ''} {
   @override
   final List<Locale> supportedL10ns = const [
 ${[
-            for (final tLocale in results['locale'] as List<String>)
-              "Locale('$tLocale')",
-          ].join(',\n')}
+                    for (final tLocale in results['locale'] as List<String>)
+                      "Locale('$tLocale')",
+                  ].join(',\n')}
   ];
 
   @override
@@ -296,7 +308,10 @@ void _checkMainFile(ArgResults results) {
       tFile.createSync(recursive: true);
     }
 
-    tFile.writeAsStringSync(DartFormatter().format('''
+    tFile.writeAsStringSync(
+        DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+            .format('''
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:patapata_core/patapata_core.dart';
@@ -304,6 +319,7 @@ import 'package:patapata_core/patapata_widgets.dart';
 
 import 'src/environment.dart';
 import 'src/startup.dart';
+import 'src/errors.dart';
 import 'src/pages/error.dart';
 import 'src/pages/splash_page.dart';
 import 'src/pages/agreement_page.dart';
@@ -333,9 +349,10 @@ void main() {
       pages: [
         // Splash screen page.
         // This uses a special factory that has good defaults for splash screens.
-        SplashPageFactory<SplashPage>(
-          create: (_) => SplashPage(),
-        ),
+        if (!kIsWeb)
+          SplashPageFactory<SplashPage>(
+            create: (_) => SplashPage(),
+          ),
         // Agreement page.
         // This uses a special factory that all [StartupSequence] pages should use.
         StartupPageFactory<AgreementPage>(
@@ -344,7 +361,11 @@ void main() {
         // Error page.
         // This uses a special factory that all full screen error pages should use.
         StandardErrorPageFactory(
-          create: (_) => ErrorPage(),
+          create: (exception) => switch (exception.error) {
+            AppException _ => AppExceptionPage(),
+            WebPageNotFound _ => WebPageNotFoundPage(),
+            _ => UnknownExceptionPage(),
+          },
         ),
         StandardPageFactory<HomePage, void>(
           create: (_) => HomePage(),
@@ -435,7 +456,9 @@ void _checkSplashPageFile(ArgResults results) {
       tFile.createSync(recursive: true);
     }
 
-    tFile.writeAsStringSync(DartFormatter().format('''
+    tFile.writeAsStringSync(
+        DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+            .format('''
 import 'package:flutter/material.dart';
 import 'package:patapata_core/patapata_widgets.dart';
 
@@ -468,7 +491,9 @@ void _checkAgreementPageFile(ArgResults results) {
       tFile.createSync(recursive: true);
     }
 
-    tFile.writeAsStringSync(DartFormatter().format('''
+    tFile.writeAsStringSync(
+        DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+            .format('''
 import 'package:flutter/material.dart';
 import 'package:patapata_core/patapata_core.dart';
 import 'package:patapata_core/patapata_widgets.dart';
@@ -523,7 +548,9 @@ void _checkHomePageFile(ArgResults results) {
       tFile.createSync(recursive: true);
     }
 
-    tFile.writeAsStringSync(DartFormatter().format('''
+    tFile.writeAsStringSync(
+        DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+            .format('''
 import 'package:flutter/material.dart';
 import 'package:patapata_core/patapata_core.dart';
 import 'package:patapata_core/patapata_widgets.dart';
@@ -560,7 +587,9 @@ void _checkStartupFile(ArgResults results) {
       tFile.createSync(recursive: true);
     }
 
-    tFile.writeAsStringSync(DartFormatter().format('''
+    tFile.writeAsStringSync(
+        DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+            .format('''
 import 'package:patapata_core/patapata_core.dart';
 
 import 'errors.dart';
@@ -578,7 +607,7 @@ class StartupStateCheckVersion extends StartupState {
     final tIsNewestVersion = true; // TODO: Change this with your own logic.
 
     if (!tIsNewestVersion) {
-      throw const AppVersionException();
+      throw AppVersionException();
     }
   }
 }
@@ -628,13 +657,15 @@ void _checkErrorsFile(ArgResults results) {
       tFile.createSync(recursive: true);
     }
 
-    tFile.writeAsStringSync(DartFormatter().format('''
+    tFile.writeAsStringSync(
+        DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+            .format('''
 import 'package:patapata_core/patapata_core.dart';
 import 'package:patapata_core/patapata_core_libs.dart';
 import 'package:patapata_core/patapata_widgets.dart';
 
 abstract base class AppException extends PatapataException {
-  const AppException({
+  AppException({
     super.app,
     super.message,
     super.original,
@@ -645,6 +676,7 @@ abstract base class AppException extends PatapataException {
     super.fix,
     super.logLevel,
     super.userLogLevel,
+    super.overridableLocalization,
   });
 
   @override
@@ -660,7 +692,7 @@ abstract base class AppException extends PatapataException {
 
 /// An exception that is thrown when the app encounters an unknown error.
 final class AppUnknownException extends AppException {
-  const AppUnknownException();
+  AppUnknownException();
 
   @override
   String get internalCode => '000';
@@ -668,7 +700,7 @@ final class AppUnknownException extends AppException {
 
 /// Thrown when an unsupported version (usually old) of the app is detected.
 final class AppVersionException extends AppException {
-  const AppVersionException() : super(logLevel: Level.INFO);
+  AppVersionException() : super(logLevel: Level.INFO);
 
   @override
   String get internalCode => '010';
@@ -697,24 +729,18 @@ final class AppVersionException extends AppException {
       tErrorPageFile.createSync(recursive: true);
     }
 
-    tErrorPageFile.writeAsStringSync(DartFormatter().format('''
+    tErrorPageFile.writeAsStringSync(
+        DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+            .format('''
 import 'package:flutter/material.dart';
 import 'package:patapata_core/patapata_core.dart';
 import 'package:patapata_core/patapata_widgets.dart';
 
 import '../errors.dart';
 
-class ErrorPage extends StandardPage<ReportRecord> {
+class AppExceptionPage extends StandardPage<ReportRecord> {
   @override
   Widget buildPage(BuildContext context) {
-    if (pageData.error is AppException) {
-      return _buildAppExceptionPage(context);
-    } else {
-      return _buildUnknownExceptionPage(context);
-    }
-  }
-
-  Widget _buildAppExceptionPage(BuildContext context) {
     final tAppException = pageData.error as AppException;
 
     return Scaffold(
@@ -737,8 +763,31 @@ class ErrorPage extends StandardPage<ReportRecord> {
       ),
     );
   }
+}
 
-  Widget _buildUnknownExceptionPage(BuildContext context) {
+class WebPageNotFoundPage extends StandardPage<ReportRecord> {
+  @override
+  Widget buildPage(BuildContext context) {
+    final tException = pageData.error as WebPageNotFound;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(tException.localizedTitle),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Text(tException.localizedMessage),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class UnknownExceptionPage extends StandardPage<ReportRecord> {
+  @override
+  Widget buildPage(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(l(context, 'errors.app.000.title')),
@@ -825,24 +874,200 @@ void _checkAndroidManifestFile(ArgResults results) {
   }
 }
 
-void _checkAndroidGradleFile(ArgResults results) {
-  stdout.writeln('Checking Android Gradle file...');
+void _checkAndroidGradleSettingsFile(ArgResults results) {
+  stdout.writeln('Checking Android Gradle Settings file...');
 
-  // Check if the Android Gradle file contains the minimum SDK version of 21.
-  // And if not, change it to 21.
-  final tFile = File('android/app/build.gradle');
-  final tFileExists = tFile.existsSync();
+  const kFileKtsPath = 'android/settings.gradle.kts';
+  const kFileGradlePath = 'android/settings.gradle';
 
-  if (!tFileExists) {
-    stdout.writeln('Android Gradle file not found.');
+  final File tFile;
+  final bool tIsKts;
+  if (!File(kFileKtsPath).existsSync()) {
+    if (!File(kFileGradlePath).existsSync()) {
+      stdout.writeln('Android Gradle Settings file not found.');
+
+      return;
+    }
+
+    tFile = File(kFileGradlePath);
+    tIsKts = false;
+  } else {
+    tFile = File(kFileKtsPath);
+    tIsKts = true;
+  }
+
+  String tDocument = tFile.readAsStringSync();
+
+  // Replace the Android Gradle Plugin with 8.7.0
+  tDocument = tDocument.replaceAll(
+    (tIsKts)
+        ? 'id("com.android.application") version "8.1.0" apply false'
+        : 'id "com.android.application" version "8.1.0" apply false',
+    (tIsKts)
+        ? 'id("com.android.application") version "8.7.0" apply false'
+        : 'id "com.android.application" version "8.7.0" apply false',
+  );
+
+  tFile.writeAsStringSync(tDocument.toString());
+}
+
+void _checkAndroidGradleWrapperFile(ArgResults results) {
+  stdout.writeln('Checking Android Gradle Wrapper file...');
+
+  final tFile = File('android/gradle/wrapper/gradle-wrapper.properties');
+
+  if (!tFile.existsSync()) {
+    stdout.writeln('Android Gradle Wrapper file not found.');
 
     return;
   }
 
-  // Replace the minimum SDK version with 21 as plain text
-  final tDocument = tFile
-      .readAsStringSync()
-      .replaceAll('minSdkVersion flutter.minSdkVersion', 'minSdkVersion 21');
+  String tDocument = tFile.readAsStringSync();
+
+  // Replace the Gradle with 8.10.2
+  tDocument = tDocument.replaceAll(
+    'gradle-8.3-all.zip',
+    'gradle-8.10.2-all.zip',
+  );
+
+  tFile.writeAsStringSync(tDocument.toString());
+}
+
+void _checkAndroidGradleFile(ArgResults results) {
+  stdout.writeln('Checking Android Gradle file...');
+
+  const kFileKtsPath = 'android/app/build.gradle.kts';
+  const kFileGradlePath = 'android/app/build.gradle';
+
+  final File tFile;
+  final bool tIsKts;
+  if (!File(kFileKtsPath).existsSync()) {
+    if (!File(kFileGradlePath).existsSync()) {
+      stdout.writeln('Android Gradle file not found.');
+
+      return;
+    }
+
+    tFile = File(kFileGradlePath);
+    tIsKts = false;
+  } else {
+    tFile = File(kFileKtsPath);
+    tIsKts = true;
+  }
+
+  String tDocument = tFile.readAsStringSync();
+
+  // Replace the compile SDK version with 35 as plain text
+  tDocument = tDocument.replaceAll(
+    'compileSdk = flutter.compileSdkVersion',
+    'compileSdk = 35',
+  );
+
+  // Replace the target SDK version with 35 as plain text
+  tDocument = tDocument.replaceAll(
+    'targetSdk = flutter.targetSdkVersion',
+    'targetSdk = 35',
+  );
+
+  // Replace the minimum SDK version with 24 as plain text
+  tDocument = tDocument.replaceAll(
+    'minSdk = flutter.minSdkVersion',
+    'minSdk = 24',
+  );
+
+  // Replace the sourceCompatibility with JAVA 11
+  tDocument = tDocument.replaceAll(
+    'sourceCompatibility = JavaVersion.VERSION_1_8',
+    'sourceCompatibility = JavaVersion.VERSION_11',
+  );
+
+  // Replace the targetCompatibility with JAVA 11
+  tDocument = tDocument.replaceAll(
+    'targetCompatibility = JavaVersion.VERSION_1_8',
+    'targetCompatibility = JavaVersion.VERSION_11',
+  );
+
+  // Replace the jvmTarget with JAVA 11
+  tDocument = tDocument.replaceAll(
+    'jvmTarget = JavaVersion.VERSION_1_8',
+    'jvmTarget = JavaVersion.VERSION_11',
+  );
+
+  // Replace the ndkVersion with version 27.0.12077973
+  //
+  // In Flutter 3.29.0, flutter.ndkVersion is set to 26.3.11579264,
+  // but AGP 8.7.0 uses 27.0.12077973 as the default.
+  // If an external package does not specify ndkVersion, the app may end up using an older version,
+  // which will trigger a warning.
+  // Therefore, set ndkVersion to match AGP 8.7.0.
+  //
+  // In Flutter 3.27.0, AGP 8.1.0 is used and its default is 25.1.8937393,
+  // but flutter.ndkVersion is 26.1.10909125.
+  // Since flutter.ndkVersion is higher than the AGP default,
+  // we should not remove the ndkVersion setting and must specify a newer version.
+  tDocument = tDocument.replaceAll(
+    'ndkVersion = flutter.ndkVersion',
+    'ndkVersion = "27.0.12077973"',
+  );
+
+  // Add configuration for coreLibraryDesugaring
+  // This is because flutter_local_notifications, which patapata_core depends on, uses Java 8 features.
+
+  final tDesugarEnableText = (tIsKts)
+      ? 'isCoreLibraryDesugaringEnabled = true'
+      : 'coreLibraryDesugaringEnabled = true';
+  final tDesugarLibraryText = (tIsKts)
+      ? 'coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")'
+      : 'coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.1.4"';
+
+  if (!tDocument.contains(tDesugarEnableText)) {
+    final tCompileOptionsRegex = RegExp(
+      r'compileOptions\s*\{([^}]*)\}',
+      dotAll: true,
+    );
+    final tMatch = tCompileOptionsRegex.firstMatch(tDocument)!;
+    final tBlockInside = tMatch.group(1)!.trimRight();
+
+    final tNewBlockInside = '''
+$tBlockInside
+        $tDesugarEnableText
+''';
+
+    tDocument = tDocument.replaceRange(
+      tMatch.start,
+      tMatch.end,
+      'compileOptions {$tNewBlockInside    }',
+    );
+  }
+
+  if (!tDocument.contains(tDesugarLibraryText)) {
+    final tDependenciesRegex = RegExp(
+      r'dependencies\s*\{([^}]*)\}',
+      dotAll: true,
+    );
+    final tMatch = tDependenciesRegex.firstMatch(tDocument);
+    if (tMatch != null) {
+      final tBlockInside = tMatch.group(1)!.trimRight();
+
+      final tNewBlockInside = '''
+$tBlockInside
+    $tDesugarLibraryText
+''';
+
+      tDocument = tDocument.replaceRange(
+        tMatch.start,
+        tMatch.end,
+        'dependencies {$tNewBlockInside}',
+      );
+    } else {
+      tDocument = '''
+$tDocument
+dependencies {
+    $tDesugarLibraryText
+}
+''';
+    }
+  }
 
   tFile.writeAsStringSync(tDocument.toString());
 }
@@ -897,8 +1122,8 @@ void _checkInfoPlistFile(ArgResults results) {
 void _checkPodFile(ArgResults results) {
   stdout.writeln('Checking Podfile file...');
 
-  // Check if the Podfile file contains the minimum version of iOS of 12.0.
-  // And if not, change it to 12.0.
+  // Check if the Podfile file contains the minimum version of iOS of 13.0.
+  // And if not, change it to 13.0.
   final tFile = File('ios/Podfile');
   final tFileExists = tFile.existsSync();
 
@@ -908,14 +1133,14 @@ void _checkPodFile(ArgResults results) {
     return;
   }
 
-  // Replace the minimum version of iOS with 12.0 as plain text
+  // Replace the minimum version of iOS with 13.0 as plain text
   // The default setting after flutter create is a commented out line.
   // So we remove that whole line and replace it.
   // As of writting this code, the default line is:
-  // # platform :ios, '11.0'
+  // # platform :ios, '12.0'
   final tDocument = tFile
       .readAsStringSync()
-      .replaceAll('# platform :ios, \'11.0\'', 'platform :ios, \'12.0\'');
+      .replaceAll('# platform :ios, \'12.0\'', 'platform :ios, \'13.0\'');
 
   tFile.writeAsStringSync(tDocument.toString());
 }
@@ -955,6 +1180,10 @@ pages:
     title: Home
     body: This is the home page.
 errors:
+  patapata:
+    '601':
+      title: Page not found
+      message: Page not found.
   app:
     '000':
       title: Unknown Error
@@ -980,21 +1209,33 @@ errors:
 
   final tPubspecDocument = YamlEditor(tPubspecFile.readAsStringSync());
 
-  tPubspecDocument.parseAt(
+  final tFlutterNode = tPubspecDocument.parseAt(
+    ['flutter'],
+    orElse: () {
+      tPubspecDocument.update(['flutter'], null);
+      return tPubspecDocument.parseAt(['flutter']);
+    },
+  );
+
+  final tAssetsNode = tPubspecDocument.parseAt(
     ['flutter', 'assets'],
     orElse: () {
-      tPubspecDocument.update([
-        'flutter'
-      ], {
-        'assets': [],
-      });
+      if (tFlutterNode.value is Map) {
+        tPubspecDocument.update(['flutter', 'assets'], []);
+      } else {
+        tPubspecDocument.update(['flutter'], {'assets': []});
+      }
 
       return tPubspecDocument.parseAt(['flutter', 'assets']);
     },
   );
 
+  final tAssetsList = tAssetsNode.value as List;
   for (final tLocale in results['locale'] as List<String>) {
-    tPubspecDocument.appendToList(['flutter', 'assets'], 'l10n/$tLocale.yaml');
+    final tPath = 'l10n/$tLocale.yaml';
+    if (!tAssetsList.contains(tPath)) {
+      tPubspecDocument.appendToList(['flutter', 'assets'], tPath);
+    }
   }
 
   tPubspecFile.writeAsStringSync(tPubspecDocument.toString());
@@ -1015,7 +1256,9 @@ void _checkWidgetTestFile(ArgResults results) {
       tFile.createSync(recursive: true);
     }
 
-    tFile.writeAsStringSync(DartFormatter().format('''
+    tFile.writeAsStringSync(
+        DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+            .format('''
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

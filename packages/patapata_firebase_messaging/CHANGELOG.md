@@ -1,3 +1,21 @@
+## 1.3.1
+
+ - Update a dependency to the latest release.
+
+## 1.3.0
+
+ - **FEAT**: Update a dependency.
+ - **FEAT**: support flutter 3.29.0.
+
+## 1.2.0
+
+ - **FIX**: update com.android.tools.build:gradle:8.1.0.
+ - **FEAT**: support flutter 3.27.1.
+
+## 1.1.1
+
+ - **FIX**: when running dart doc, some documentation is not generated.
+
 ## 1.1.0
 
  - **FEAT**: Adapt to the Privacy Manifest.
