@@ -61,22 +61,24 @@ public class PatapataAdjustDeeplinkPlugin: NSObject, FlutterPlugin, PatapataPlug
     continue userActivity: NSUserActivity,
     restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
   ) -> Bool {
-    guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-          let incomingURL = userActivity.webpageURL,
-          let deeplink = ADJDeeplink(deeplink: incomingURL) else {
-      return false
-    }
-
     guard mEnabled else { 
       return true 
     }
 
-    Adjust.processAndResolve(deeplink, withCompletionHandler: { [weak self] resolved in
-      self?.mChannel.invokeMethod(
-        "processAdjustDeepLink",
-        arguments: resolved
-      )
-    })
+    if userActivity.activityType.isEqual(NSUserActivityTypeBrowsingWeb) {
+        if let incomingURL = userActivity.webpageURL {
+            if let deeplink = ADJDeeplink(deeplink: incomingURL) {
+              Adjust.processAndResolve(deeplink) { [weak self] resolved in
+                  guard let urlString = resolved?.absoluteString else { return }
+                  self?.mChannel.invokeMethod(
+                      "processAdjustDeepLink",
+                      arguments: urlString
+                  )
+              }
+            }
+        }
+    }
+  
     return true
   }
 }
