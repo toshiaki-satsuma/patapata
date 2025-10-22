@@ -47,7 +47,7 @@ public class PatapataAdjustDeeplinkPlugin: NSObject, FlutterPlugin, PatapataPlug
 
   public func application(
     _ application: UIApplication,
-    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     if let url = AppLinks.shared.getLink(launchOptions: launchOptions) {
       AppLinks.shared.handleLink(url: url)
@@ -59,7 +59,7 @@ public class PatapataAdjustDeeplinkPlugin: NSObject, FlutterPlugin, PatapataPlug
   public func application(
     _ application: UIApplication,
     continue userActivity: NSUserActivity,
-    restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+    restorationHandler: @escaping ([Any]?) -> Void
   ) -> Bool {
     guard mEnabled else { 
       return true 
@@ -68,10 +68,10 @@ public class PatapataAdjustDeeplinkPlugin: NSObject, FlutterPlugin, PatapataPlug
     if userActivity.activityType.isEqual(NSUserActivityTypeBrowsingWeb) {
         if let incomingURL = userActivity.webpageURL {
             if let deeplink = ADJDeeplink(deeplink: incomingURL) {
-              Adjust.processAndResolve(deeplink) { [weak self] resolveDeeplink in
+              Adjust.processAndResolve(deeplink) { [weak self] resolved in
                   self?.mChannel.invokeMethod(
                       "processAdjustDeepLink",
-                      arguments: resolveDeeplink
+                      arguments: resolved
                   )
               }
             }
