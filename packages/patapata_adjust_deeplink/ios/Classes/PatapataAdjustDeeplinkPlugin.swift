@@ -68,7 +68,7 @@ public class PatapataAdjustDeeplinkPlugin: NSObject, FlutterPlugin, PatapataPlug
     if userActivity.activityType.isEqual(NSUserActivityTypeBrowsingWeb) {
         if let incomingURL = userActivity.webpageURL {
             if let deeplink = ADJDeeplink(deeplink: incomingURL) {
-              Adjust.processAndResolve(deeplink) { resolveDeeplink in
+              Adjust.processAndResolve(deeplink) { [weak self] resolveDeeplink in
                   self?.mChannel.invokeMethod(
                       "processAdjustDeepLink",
                       arguments: resolveDeeplink
