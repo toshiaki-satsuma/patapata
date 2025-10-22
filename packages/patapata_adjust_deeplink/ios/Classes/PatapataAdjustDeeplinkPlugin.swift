@@ -7,6 +7,7 @@ import Flutter
 import UIKit
 import AdjustSdk
 import app_links
+import patapata_core
 
 public class PatapataAdjustDeeplinkPlugin: NSObject, FlutterPlugin, PatapataPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {

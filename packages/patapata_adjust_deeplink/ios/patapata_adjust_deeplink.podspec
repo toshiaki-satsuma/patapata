@@ -17,6 +17,7 @@ A new Flutter plugin project.
   s.dependency 'Flutter'
   s.dependency 'Adjust'
   s.dependency 'app_links'
+  s.dependency 'patapata_core'
   s.platform = :ios, '14.0'
 
   # Flutter.framework does not contain a i386 slice.
