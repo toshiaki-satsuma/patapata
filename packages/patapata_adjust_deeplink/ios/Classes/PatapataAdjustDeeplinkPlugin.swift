@@ -66,8 +66,12 @@ public class PatapataAdjustDeeplinkPlugin: NSObject, FlutterPlugin, PatapataPlug
       return false
     }
 
-    Adjust.processAndResolve(deeplink, withCompletionHandler: { resolved in
-      PatapataAdjustDeeplinkPlugin.channel?.invokeMethod(
+    guard mEnabled else { 
+      return true 
+    }
+
+    Adjust.processAndResolve(deeplink, withCompletionHandler: { [weak self] resolved in
+      self?.mChannel.invokeMethod(
         "processAdjustDeepLink",
         arguments: resolved
       )
