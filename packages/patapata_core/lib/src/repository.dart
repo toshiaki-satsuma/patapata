@@ -363,6 +363,47 @@ abstract class Repository<T extends RepositoryModelBase<T, I>,
     }
   }
 
+  /// Sync stores the repository model in the cache.
+  ///
+  /// If an identical model exists within the cache, it will overwrite the existing model.
+  /// The determination of identity is based on [RepositoryModelBase.repositoryId].
+  ///
+  /// For [RepositoryModel], the data to overwrite depends on the parameter set configured in [RepositoryClass.sets].
+  /// Only the variables held by the parameter set to which the [RepositoryModel] belongs will be overwritten.
+  ///
+  /// For [SimpleRepositoryModel], the data to overwrite depends on the [SimpleRepositoryModel.update] in the derived class.
+  T storeSync(T object) {
+    final tId = object.repositoryId;
+
+    if (_cacheContains(tId)) {
+      // Update the set, don't create a new one.
+      final tMainObject = _accessCache(tId)!;
+
+      if (tMainObject is RepositoryModel<T, I>) {
+        tMainObject.lock(
+          (batch) {
+            tMainObject.update(batch, object);
+            _handleObjectCacheDuration(tMainObject);
+            batch.commit();
+          },
+        );
+      } else {
+        _handleObjectCacheDuration(tMainObject);
+
+        if (tMainObject is SimpleRepositoryModel<T, I>) {
+          tMainObject.update(object);
+        }
+      }
+
+      return tMainObject;
+    } else {
+      _setCache(tId, object);
+      _handleObjectCacheDuration(object);
+
+      return object;
+    }
+  }
+
   /// A version of [store] that supports multiple items.
   /// For details, please refer to [store].
   Future<Iterable<T>> storeMany(Iterable<T> objects) async {
