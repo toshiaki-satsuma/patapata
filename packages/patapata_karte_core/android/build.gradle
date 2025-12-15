@@ -27,6 +27,7 @@ apply plugin: 'kotlin-android'
 android {
     namespace 'dev.patapata.patapata_karte_core'
     compileSdkVersion 34
+    namespace 'dev.patapata.patapata_karte_core'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
