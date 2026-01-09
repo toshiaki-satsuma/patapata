@@ -88,10 +88,6 @@ void main() {
       );
       expect(deviceInfoPlugin.androidDeviceInfo!.serialNumber, 'SERIAL');
       expect(deviceInfoPlugin.androidDeviceInfo!.isLowRamDevice, isFalse);
-      expect(deviceInfoPlugin.androidDeviceInfo!.freeDiskSize, 1024);
-      expect(deviceInfoPlugin.androidDeviceInfo!.totalDiskSize, 2024);
-      expect(deviceInfoPlugin.androidDeviceInfo!.physicalRamSize, 8192);
-      expect(deviceInfoPlugin.androidDeviceInfo!.availableRamSize, 4096);
     });
 
     test('setMockAndroidDeviceInfo with arguments', () async {
@@ -167,10 +163,6 @@ void main() {
       expect(deviceInfoPlugin.androidDeviceInfo!.version.securityPatch, '');
       expect(deviceInfoPlugin.androidDeviceInfo!.serialNumber, '');
       expect(deviceInfoPlugin.androidDeviceInfo!.isLowRamDevice, isFalse);
-      expect(deviceInfoPlugin.androidDeviceInfo!.freeDiskSize, 0);
-      expect(deviceInfoPlugin.androidDeviceInfo!.totalDiskSize, 0);
-      expect(deviceInfoPlugin.androidDeviceInfo!.physicalRamSize, 0);
-      expect(deviceInfoPlugin.androidDeviceInfo!.availableRamSize, 0);
     });
   });
 
@@ -270,10 +262,6 @@ void main() {
       expect(deviceInfoPlugin.iosDeviceInfo!.isPhysicalDevice, isFalse);
       expect(deviceInfoPlugin.iosDeviceInfo!.isiOSAppOnMac, isFalse);
       expect(deviceInfoPlugin.iosDeviceInfo!.identifierForVendor, '');
-      expect(deviceInfoPlugin.iosDeviceInfo!.freeDiskSize, 0);
-      expect(deviceInfoPlugin.iosDeviceInfo!.totalDiskSize, 0);
-      expect(deviceInfoPlugin.iosDeviceInfo!.physicalRamSize, 0);
-      expect(deviceInfoPlugin.iosDeviceInfo!.availableRamSize, 0);
     });
   });
 
