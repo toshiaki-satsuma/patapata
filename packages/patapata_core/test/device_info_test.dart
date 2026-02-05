@@ -29,8 +29,10 @@ void main() {
 
       expect(tResult, isTrue);
       expect(deviceInfoPlugin.androidDeviceInfo != null, isTrue);
-      expect(deviceInfoPlugin.androidDeviceInfo!.data,
-          DeviceInfoPlugin.mockAndroidDeviceInfoMap);
+      expect(
+        deviceInfoPlugin.androidDeviceInfo!.data,
+        DeviceInfoPlugin.mockAndroidDeviceInfoMap,
+      );
     });
 
     test('setMockAndroidDeviceInfo no arguments', () async {
@@ -53,23 +55,37 @@ void main() {
       expect(deviceInfoPlugin.androidDeviceInfo!.isPhysicalDevice, isTrue);
       expect(deviceInfoPlugin.androidDeviceInfo!.fingerprint, 'fingerprint');
       expect(deviceInfoPlugin.androidDeviceInfo!.manufacturer, 'manufacturer');
-      expect(deviceInfoPlugin.androidDeviceInfo!.supportedAbis,
-          ['arm64-v8a', 'x86', 'x86_64']);
-      expect(deviceInfoPlugin.androidDeviceInfo!.systemFeatures,
-          ['FEATURE_AUDIO_PRO', 'FEATURE_AUDIO_OUTPUT']);
-      expect(deviceInfoPlugin.androidDeviceInfo!.supported32BitAbis,
-          ['x86 (IA-32)', 'MMX']);
-      expect(deviceInfoPlugin.androidDeviceInfo!.supported64BitAbis,
-          ['x86-64', 'MMX', 'SSSE3']);
+      expect(deviceInfoPlugin.androidDeviceInfo!.supportedAbis, [
+        'arm64-v8a',
+        'x86',
+        'x86_64',
+      ]);
+      expect(deviceInfoPlugin.androidDeviceInfo!.systemFeatures, [
+        'FEATURE_AUDIO_PRO',
+        'FEATURE_AUDIO_OUTPUT',
+      ]);
+      expect(deviceInfoPlugin.androidDeviceInfo!.supported32BitAbis, [
+        'x86 (IA-32)',
+        'MMX',
+      ]);
+      expect(deviceInfoPlugin.androidDeviceInfo!.supported64BitAbis, [
+        'x86-64',
+        'MMX',
+        'SSSE3',
+      ]);
       expect(deviceInfoPlugin.androidDeviceInfo!.version.sdkInt, 16);
       expect(deviceInfoPlugin.androidDeviceInfo!.version.baseOS, 'baseOS');
       expect(deviceInfoPlugin.androidDeviceInfo!.version.previewSdkInt, 30);
       expect(deviceInfoPlugin.androidDeviceInfo!.version.release, 'release');
       expect(deviceInfoPlugin.androidDeviceInfo!.version.codename, 'codename');
-      expect(deviceInfoPlugin.androidDeviceInfo!.version.incremental,
-          'incremental');
-      expect(deviceInfoPlugin.androidDeviceInfo!.version.securityPatch,
-          'securityPatch');
+      expect(
+        deviceInfoPlugin.androidDeviceInfo!.version.incremental,
+        'incremental',
+      );
+      expect(
+        deviceInfoPlugin.androidDeviceInfo!.version.securityPatch,
+        'securityPatch',
+      );
       expect(deviceInfoPlugin.androidDeviceInfo!.serialNumber, 'SERIAL');
       expect(deviceInfoPlugin.androidDeviceInfo!.isLowRamDevice, isFalse);
     });
@@ -115,8 +131,10 @@ void main() {
       await deviceInfoPlugin.init(app);
 
       expect(deviceInfoPlugin.androidDeviceInfo != null, isTrue);
-      expect(deviceInfoPlugin.androidDeviceInfo!.data,
-          DeviceInfoPlugin.mockAndroidDeviceInfoMap);
+      expect(
+        deviceInfoPlugin.androidDeviceInfo!.data,
+        DeviceInfoPlugin.mockAndroidDeviceInfoMap,
+      );
       expect(deviceInfoPlugin.androidDeviceInfo!.id, '');
       expect(deviceInfoPlugin.androidDeviceInfo!.host, '');
       expect(deviceInfoPlugin.androidDeviceInfo!.tags, '');
@@ -162,8 +180,10 @@ void main() {
 
       expect(tResult, isTrue);
       expect(deviceInfoPlugin.iosDeviceInfo != null, isTrue);
-      expect(deviceInfoPlugin.iosDeviceInfo!.data,
-          DeviceInfoPlugin.mockIosDeviceInfoMap);
+      expect(
+        deviceInfoPlugin.iosDeviceInfo!.data,
+        DeviceInfoPlugin.mockIosDeviceInfoMap,
+      );
     });
 
     test('setMockIosDeviceInfo no arguments', () async {
@@ -171,8 +191,10 @@ void main() {
       await deviceInfoPlugin.init(app);
 
       expect(deviceInfoPlugin.iosDeviceInfo != null, isTrue);
-      expect(deviceInfoPlugin.iosDeviceInfo!.data,
-          DeviceInfoPlugin.mockIosDeviceInfoMap);
+      expect(
+        deviceInfoPlugin.iosDeviceInfo!.data,
+        DeviceInfoPlugin.mockIosDeviceInfoMap,
+      );
       expect(deviceInfoPlugin.iosDeviceInfo!.name, 'name');
       expect(deviceInfoPlugin.iosDeviceInfo!.model, 'model');
       expect(deviceInfoPlugin.iosDeviceInfo!.modelName, 'modelName');
@@ -186,8 +208,14 @@ void main() {
       expect(deviceInfoPlugin.iosDeviceInfo!.localizedModel, 'localizedModel');
       expect(deviceInfoPlugin.iosDeviceInfo!.isPhysicalDevice, isTrue);
       expect(deviceInfoPlugin.iosDeviceInfo!.isiOSAppOnMac, isTrue);
-      expect(deviceInfoPlugin.iosDeviceInfo!.identifierForVendor,
-          'identifierForVendor');
+      expect(
+        deviceInfoPlugin.iosDeviceInfo!.identifierForVendor,
+        'identifierForVendor',
+      );
+      expect(deviceInfoPlugin.iosDeviceInfo!.freeDiskSize, 1024);
+      expect(deviceInfoPlugin.iosDeviceInfo!.totalDiskSize, 2024);
+      expect(deviceInfoPlugin.iosDeviceInfo!.physicalRamSize, 8192);
+      expect(deviceInfoPlugin.iosDeviceInfo!.availableRamSize, 4096);
     });
 
     test('setMockIosDeviceInfo with arguments', () async {
@@ -216,8 +244,10 @@ void main() {
       await deviceInfoPlugin.init(app);
 
       expect(deviceInfoPlugin.iosDeviceInfo != null, isTrue);
-      expect(deviceInfoPlugin.iosDeviceInfo!.data,
-          DeviceInfoPlugin.mockIosDeviceInfoMap);
+      expect(
+        deviceInfoPlugin.iosDeviceInfo!.data,
+        DeviceInfoPlugin.mockIosDeviceInfoMap,
+      );
       expect(deviceInfoPlugin.iosDeviceInfo!.name, '');
       expect(deviceInfoPlugin.iosDeviceInfo!.model, '');
       expect(deviceInfoPlugin.iosDeviceInfo!.modelName, '');
@@ -249,8 +279,10 @@ void main() {
 
       expect(tResult, isTrue);
       expect(deviceInfoPlugin.macOsInfo != null, isTrue);
-      expect(deviceInfoPlugin.macOsInfo!.data,
-          DeviceInfoPlugin.mockMacosDeviceInfoMap);
+      expect(
+        deviceInfoPlugin.macOsInfo!.data,
+        DeviceInfoPlugin.mockMacosDeviceInfoMap,
+      );
     });
 
     test('setMockMacosDeviceInfoMap no arguments', () async {
@@ -258,8 +290,10 @@ void main() {
       await deviceInfoPlugin.init(app);
 
       expect(deviceInfoPlugin.macOsInfo != null, isTrue);
-      expect(deviceInfoPlugin.macOsInfo!.data,
-          DeviceInfoPlugin.mockMacosDeviceInfoMap);
+      expect(
+        deviceInfoPlugin.macOsInfo!.data,
+        DeviceInfoPlugin.mockMacosDeviceInfoMap,
+      );
       expect(deviceInfoPlugin.macOsInfo!.arch, 'arch');
       expect(deviceInfoPlugin.macOsInfo!.model, 'model');
       expect(deviceInfoPlugin.macOsInfo!.modelName, 'modelName');
@@ -293,8 +327,10 @@ void main() {
       await deviceInfoPlugin.init(app);
 
       expect(deviceInfoPlugin.macOsInfo != null, isTrue);
-      expect(deviceInfoPlugin.macOsInfo!.data,
-          DeviceInfoPlugin.mockMacosDeviceInfoMap);
+      expect(
+        deviceInfoPlugin.macOsInfo!.data,
+        DeviceInfoPlugin.mockMacosDeviceInfoMap,
+      );
       expect(deviceInfoPlugin.macOsInfo!.arch, '');
       expect(deviceInfoPlugin.macOsInfo!.model, '');
       expect(deviceInfoPlugin.macOsInfo!.modelName, '');
@@ -416,12 +452,18 @@ void main() {
       expect(deviceInfoPlugin.windowsInfo!.suitMask, 1);
       expect(deviceInfoPlugin.windowsInfo!.productType, 1);
       expect(deviceInfoPlugin.windowsInfo!.reserved, 1);
-      expect(deviceInfoPlugin.windowsInfo!.buildLab,
-          '22000.co_release.210604-1628');
-      expect(deviceInfoPlugin.windowsInfo!.buildLabEx,
-          '22000.1.amd64fre.co_release.210604-1628');
-      expect(deviceInfoPlugin.windowsInfo!.digitalProductId,
-          Uint8List.fromList([]));
+      expect(
+        deviceInfoPlugin.windowsInfo!.buildLab,
+        '22000.co_release.210604-1628',
+      );
+      expect(
+        deviceInfoPlugin.windowsInfo!.buildLabEx,
+        '22000.1.amd64fre.co_release.210604-1628',
+      );
+      expect(
+        deviceInfoPlugin.windowsInfo!.digitalProductId,
+        Uint8List.fromList([]),
+      );
       expect(deviceInfoPlugin.windowsInfo!.displayVersion, '21H2');
       expect(deviceInfoPlugin.windowsInfo!.editionId, 'Pro');
       expect(deviceInfoPlugin.windowsInfo!.installDate, DateTime(2022, 04, 02));
@@ -479,8 +521,10 @@ void main() {
       expect(deviceInfoPlugin.windowsInfo!.reserved, 0);
       expect(deviceInfoPlugin.windowsInfo!.buildLab, '');
       expect(deviceInfoPlugin.windowsInfo!.buildLabEx, '');
-      expect(deviceInfoPlugin.windowsInfo!.digitalProductId,
-          Uint8List.fromList([]));
+      expect(
+        deviceInfoPlugin.windowsInfo!.digitalProductId,
+        Uint8List.fromList([]),
+      );
       expect(deviceInfoPlugin.windowsInfo!.displayVersion, '');
       expect(deviceInfoPlugin.windowsInfo!.editionId, '');
       expect(deviceInfoPlugin.windowsInfo!.installDate, DateTime(2023, 04, 02));
@@ -506,16 +550,20 @@ void main() {
 
       expect(tResult, isTrue);
       expect(deviceInfoPlugin.webInfo != null, isTrue);
-      expect(deviceInfoPlugin.webInfo!.data,
-          DeviceInfoPlugin.mockWebBrowserInfoMap);
+      expect(
+        deviceInfoPlugin.webInfo!.data,
+        DeviceInfoPlugin.mockWebBrowserInfoMap,
+      );
     });
     test('setMockWebBrowserInfoMap no arguments', () async {
       DeviceInfoPlugin.setMockWebBrowserInfo();
       await deviceInfoPlugin.init(app);
 
       expect(deviceInfoPlugin.webInfo != null, isTrue);
-      expect(deviceInfoPlugin.webInfo!.data,
-          DeviceInfoPlugin.mockWebBrowserInfoMap);
+      expect(
+        deviceInfoPlugin.webInfo!.data,
+        DeviceInfoPlugin.mockWebBrowserInfoMap,
+      );
     });
     test('setMockWebBrowserInfoMap with arguments', () async {
       DeviceInfoPlugin.setMockWebBrowserInfo(
@@ -538,8 +586,10 @@ void main() {
       await deviceInfoPlugin.init(app);
 
       expect(deviceInfoPlugin.webInfo != null, isTrue);
-      expect(deviceInfoPlugin.webInfo!.data,
-          DeviceInfoPlugin.mockWebBrowserInfoMap);
+      expect(
+        deviceInfoPlugin.webInfo!.data,
+        DeviceInfoPlugin.mockWebBrowserInfoMap,
+      );
     });
   });
 }
